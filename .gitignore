@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.hypothesis/
+backend/.env
+backend/ledgerline.db*
+backend/storage/
+frontend/node_modules/
+frontend/dist/
+.venv/
+venv/
+.DS_Store
+backend/static/
+*.tsbuildinfo

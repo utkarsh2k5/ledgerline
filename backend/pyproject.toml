@@ -1,0 +1,13 @@
+[project]
+name = "ledgerline"
+version = "1.0.0"
+description = "Performance reporting engine for defined benefit pension schemes"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 120
