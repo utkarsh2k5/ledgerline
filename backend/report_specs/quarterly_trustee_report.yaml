@@ -1,0 +1,40 @@
+# Full quarterly investment report for the Trustee board.
+# Every number referenced here is a fact id from the analytics engine
+# (see docs/FACTS.md); the builder refuses to render ids that don't exist.
+name: quarterly_trustee_report
+title: Quarterly Investment Report
+description: Full quarterly pack - performance, attribution, risk, funding and data quality.
+audience: Trustees
+formats: [docx, pptx, html]
+linking: carino
+sections:
+  - type: kpis
+    title: At a glance
+    items:
+      - {fact: mv.TOTAL.end, label: Total assets}
+      - {fact: perf.TOTAL.3m.ret, label: Return (quarter), sub: perf.TOTAL.3m.excess}
+      - {fact: perf.TOTAL.1y.ret, label: Return (1 year), sub: perf.TOTAL.1y.excess}
+      - {fact: funding.ratio, label: Funding ratio, sub: funding.surplus}
+      - {fact: funding.hedge_ratio, label: Interest-rate hedge}
+  - type: commentary
+    title: Investment commentary
+    words: 170
+  - type: performance_table
+    title: Performance by mandate
+    periods: [3m, 1y, 3y]
+  - type: chart
+    chart: cumulative
+    title: Cumulative performance since inception
+  - type: attribution
+    title: What drove relative performance?
+    period: 1y
+  - type: allocation
+    title: Asset allocation vs strategy
+  - type: risk
+    title: Risk (3 years, annualised)
+  - type: funding
+    title: Funding position and interest-rate hedging
+  - type: data_quality
+    title: Data quality and reconciliation
+  - type: lineage_appendix
+    title: "Appendix: where the headline numbers come from"

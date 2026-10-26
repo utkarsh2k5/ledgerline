@@ -1,0 +1,24 @@
+# Two-page summary for a client who wants the headline only.
+# Same engine, different spec: no code changes needed for a new layout.
+name: trustee_summary
+title: Investment Summary
+description: Short summary - headline numbers, commentary, performance and funding only.
+audience: Trustees (summary)
+formats: [docx, pptx, html]
+linking: carino
+sections:
+  - type: kpis
+    title: Headlines
+    items:
+      - {fact: perf.TOTAL.3m.ret, label: Quarter return, sub: perf.TOTAL.3m.excess}
+      - {fact: funding.ratio, label: Funding ratio}
+      - {fact: funding.hedge_ratio, label: Hedge ratio}
+  - type: commentary
+    title: Summary
+    words: 110
+  - type: performance_table
+    title: Performance
+    periods: [3m, 1y]
+  - type: funding
+    title: Funding
+    include_simulation: false
