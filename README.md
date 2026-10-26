@@ -6,13 +6,14 @@
   <img src="https://img.shields.io/badge/python-3.11%2B-17324d" alt="Python 3.11+">
   <img src="https://img.shields.io/badge/FastAPI-backend-17324d" alt="FastAPI">
   <img src="https://img.shields.io/badge/React%20%2B%20TypeScript-frontend-17324d" alt="React + TypeScript">
+  <a href="https://github.com/utkarsh2k5/ledgerline/actions/workflows/ci.yml"><img src="https://github.com/utkarsh2k5/ledgerline/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <img src="https://img.shields.io/badge/tests-60%20passing-0b7a3e" alt="60 tests passing">
   <img src="https://img.shields.io/badge/Postgres%20%7C%20SQLite-supported-2a78d6" alt="Postgres and SQLite">
   <img src="https://img.shields.io/badge/license-MIT-8a8984" alt="MIT license">
 </p>
 
 <p align="center">
-  <b><a href="#try-it">Live demo</a></b> &nbsp;·&nbsp;
+  <b><a href="https://ledgerline-b4k8.onrender.com">Live demo</a></b> &nbsp;·&nbsp;
   <a href="#what-it-does">What it does</a> &nbsp;·&nbsp;
   <a href="#the-reports-it-produces">Sample reports</a> &nbsp;·&nbsp;
   <a href="#how-its-built">How it's built</a> &nbsp;·&nbsp;
@@ -24,6 +25,8 @@
 Investment consultants who look after **defined benefit (DB) pension schemes** send trustees a performance report every quarter. Most of the work isn't the analysis. It's chasing numbers that don't agree, pasting them into Word and PowerPoint, and then answering *"where did this figure come from?"*
 
 Ledgerline is my attempt at automating that properly. It takes the raw files (custodian valuations, fund manager packs, index returns, the actuary's cashflows, a gilt curve), reconciles them, explains performance, and produces the report in Word, PowerPoint and an interactive web version. **Every number in the output can be traced back to the spreadsheet cell it came from.**
+
+**Try it live: [ledgerline-b4k8.onrender.com](https://ledgerline-b4k8.onrender.com)**, no sign-up, one click to get in.
 
 <p align="center">
   <img src="docs/gifs/lineage.gif" alt="Clicking a figure to trace it back to the custodian's file" width="88%">
@@ -70,6 +73,8 @@ Brinson-Fachler splits the fund's relative return into **allocation** (holding m
 ### 4. Writes the commentary with AI, then fact-checks it
 
 Gemini drafts the trustee commentary from a sheet of computed figures. Before it's used, a verifier checks **every number at the precision written**, any explicit signs, whether "outperformed" or "lagged" matches the actual sign, and surplus/deficit claims. A failed draft gets one retry with the errors fed back; after that a rule-based paragraph is used instead. Nothing unchecked reaches the report.
+
+The free Gemini tier is sometimes overloaded, so busy responses (5xx) are retried with backoff, then the request moves to a lighter backup model. If everything is busy the report still goes out with the rule-based text, labelled *"AI busy"* rather than *"AI draft rejected"*, so the two cases aren't confused.
 
 ```text
 Draft 1  "…returned 4.67%, ahead of the benchmark return of 4.32% by 0.25%."
@@ -129,7 +134,7 @@ The whole app, charts included, has a light and a dark theme. It follows your sy
 
 ### Live demo
 
-**Live:** `https://ledgerline.onrender.com` *(update after deploying)*. It runs on a free instance, so the first load after a quiet spell takes about a minute, and the demo data resets on every restart.
+**Live: [ledgerline-b4k8.onrender.com](https://ledgerline-b4k8.onrender.com)**. It runs on a free instance, so the first load after a quiet spell takes about a minute, and the demo data resets on every restart.
 
 There's no sign-up or password. The start page has three buttons, one per role, and you can switch roles from the sidebar at any time:
 
@@ -152,7 +157,7 @@ There's no sign-up or password. The start page has three buttons, one per role, 
 3. On [Render](https://render.com): **New → Blueprint**, pick the repo. `render.yaml` sets everything up and asks for `GEMINI_API_KEY`. Paste the key there, **not** in the code.
 4. Wait for the build, then open the URL.
 
-The root `Dockerfile` builds the React app and serves it from FastAPI, so it's one free web service. The free Gemini tier is enough: each report makes one call (two if the first draft fails the check). If the quota runs out, reports still generate with the rule-based commentary and the reason is logged.
+The root `Dockerfile` builds the React app and serves it from FastAPI, so it's one free web service. The free Gemini tier is enough: each report makes one call (two if the first draft fails the check). If the quota runs out or Gemini is busy, reports still generate with the rule-based commentary and the reason is logged. Pushing to `main` redeploys automatically.
 
 ### Run it locally
 
@@ -206,7 +211,7 @@ flowchart LR
 | Documents | python-docx, python-pptx, matplotlib, Jinja2 |
 | AI | Gemini REST API behind a small provider interface (swappable), plus an offline mock |
 | Frontend | React 18, TypeScript, React Router, Chart.js, plain CSS |
-| Quality | pytest, Hypothesis, GitHub Actions on SQLite and Postgres |
+| Quality | pytest, Hypothesis, GitHub Actions (SQLite and Postgres on every push) |
 | Ops | Docker, docker-compose, Render blueprint |
 
 **A few decisions worth explaining**
