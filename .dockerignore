@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/__pycache__
+**/.pytest_cache
+**/.hypothesis
+backend/storage
+backend/ledgerline.db*
+backend/static
+backend/.env
+.git
+sample_output
+docs

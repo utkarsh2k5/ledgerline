@@ -1,0 +1,22 @@
+# One-click deploy on Render: New > Blueprint > pick this repo.
+# You'll be asked for GEMINI_API_KEY once (get a free one at https://aistudio.google.com/apikey).
+# The key lives in Render's dashboard as a secret, never in this repo.
+services:
+  - type: web
+    name: ledgerline
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: AI_PROVIDER
+        value: gemini
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-flash-latest
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DEMO_MODE
+        value: "true"

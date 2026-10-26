@@ -1,0 +1,44 @@
+# docker compose up --build   ->  http://localhost:8080  (API docs: http://localhost:8000/docs)
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ledgerline
+      POSTGRES_PASSWORD: ledgerline
+      POSTGRES_DB: ledgerline
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ledgerline"]
+      interval: 3s
+      retries: 20
+
+  api:
+    build: { context: ., dockerfile: backend/Dockerfile }
+    environment: &backend-env
+      DATABASE_URL: postgresql+psycopg://ledgerline:ledgerline@db:5432/ledgerline
+      JWT_SECRET: ${JWT_SECRET:-docker-demo-secret-change-me-please-32b}
+      AI_PROVIDER: ${AI_PROVIDER:-mock}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-flash-latest}
+      STORAGE_DIR: /app/backend/storage
+      EMBEDDED_WORKER: "false"
+      CORS_ORIGINS: http://localhost:8080
+    volumes: [reports:/app/backend/storage]
+    depends_on: { db: { condition: service_healthy } }
+    ports: ["8000:8000"]
+
+  worker:
+    build: { context: ., dockerfile: backend/Dockerfile }
+    command: ["sh", "-c", "sleep 8 && python -m app.jobs.worker"]
+    environment: *backend-env
+    volumes: [reports:/app/backend/storage]
+    depends_on: { db: { condition: service_healthy } }
+
+  web:
+    build: ./frontend
+    ports: ["8080:80"]
+    depends_on: [api]
+
+volumes:
+  pgdata:
+  reports:
