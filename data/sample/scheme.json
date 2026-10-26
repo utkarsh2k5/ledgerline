@@ -1,0 +1,74 @@
+{
+  "code": "NBPS",
+  "name": "Northbridge Engineering Pension Scheme",
+  "sponsor": "Northbridge Engineering Ltd (fictional)",
+  "currency": "GBP",
+  "funds": [
+    {
+      "code": "GEQ",
+      "name": "Global Equity",
+      "asset_class": "Global equities",
+      "manager": "Ashgrove Capital",
+      "benchmark_name": "Global equity index (GBP)",
+      "target_weight": 0.25,
+      "is_growth": true,
+      "effective_duration": 0.0,
+      "sort_order": 0
+    },
+    {
+      "code": "EME",
+      "name": "Emerging Markets Equity",
+      "asset_class": "EM equities",
+      "manager": "Larkfield Investors",
+      "benchmark_name": "EM equity index (GBP)",
+      "target_weight": 0.1,
+      "is_growth": true,
+      "effective_duration": 0.0,
+      "sort_order": 1
+    },
+    {
+      "code": "DGF",
+      "name": "Diversified Growth",
+      "asset_class": "Multi-asset",
+      "manager": "Halden Multi-Asset",
+      "benchmark_name": "SONIA + 4% p.a.",
+      "target_weight": 0.1,
+      "is_growth": true,
+      "effective_duration": 0.0,
+      "sort_order": 2
+    },
+    {
+      "code": "PRP",
+      "name": "UK Property",
+      "asset_class": "Real estate",
+      "manager": "Corran Real Estate",
+      "benchmark_name": "UK property index",
+      "target_weight": 0.1,
+      "is_growth": true,
+      "effective_duration": 0.0,
+      "sort_order": 3
+    },
+    {
+      "code": "CRD",
+      "name": "Buy & Maintain Credit",
+      "asset_class": "Corporate bonds",
+      "manager": "Thornbury Credit",
+      "benchmark_name": "Sterling corporate bond index",
+      "target_weight": 0.15,
+      "is_growth": false,
+      "effective_duration": 7.0,
+      "sort_order": 4
+    },
+    {
+      "code": "LDI",
+      "name": "Liability Driven Investment",
+      "asset_class": "LDI",
+      "manager": "Corvid LDI",
+      "benchmark_name": "Scheme liability benchmark",
+      "target_weight": 0.3,
+      "is_growth": false,
+      "effective_duration": 46.2,
+      "sort_order": 5
+    }
+  ]
+}
