@@ -1,5 +1,5 @@
 // Set VITE_GITHUB_URL at build time to point somewhere else.
-export const GITHUB_URL: string = import.meta.env.VITE_GITHUB_URL ?? "https://github.com/utkarsh2k5";
+export const GITHUB_URL: string = import.meta.env.VITE_GITHUB_URL ?? "https://github.com/utkarsh2k5/ledgerline";
 
 export function GitHubLink({ onDark = false, label = "GitHub" }: { onDark?: boolean; label?: string }) {
   return (

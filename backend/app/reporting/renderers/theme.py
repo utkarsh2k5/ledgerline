@@ -22,7 +22,17 @@ STATUS_TEXT = {
 }
 
 
-def status_line(status: str, provider: str) -> str:
+UNAVAILABLE_TEXT = ("Standard commentary: the AI service was busy or unavailable when this report was made, "
+                    "so this text was generated directly from the computed figures.")
+
+
+def _unavailable(issues) -> bool:
+    return bool(issues) and all(i.get("kind") == "provider_error" for i in issues)
+
+
+def status_line(status: str, provider: str, issues=None) -> str:
+    if status == "fallback" and _unavailable(issues):
+        return UNAVAILABLE_TEXT
     if status == "verified" and provider == "template":
         return "Commentary generated from the computed figures and verified."
     if status == "verified":

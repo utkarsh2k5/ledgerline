@@ -158,7 +158,7 @@ def render_docx(doc: Document, path: Path) -> Path:
                     p.paragraph_format.line_spacing = 1.2
                     _run(p, para.strip(), 10.5)
                 p = d.add_paragraph()
-                _run(p, ("✓ " if block.status == "verified" else "ⓘ ") + T.status_line(block.status, block.provider),
+                _run(p, ("✓ " if block.status == "verified" else "ⓘ ") + T.status_line(block.status, block.provider, block.issues),
                      8, color=T.GOOD if block.status == "verified" else T.WARN_INK, italic=True)
             elif isinstance(block, Callout):
                 t = d.add_table(rows=1, cols=1)

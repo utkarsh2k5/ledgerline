@@ -60,6 +60,12 @@ class Settings:
     gemini_model: str = field(
         default_factory=lambda: os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
     )
+    # Tried in order when the main model is overloaded or out of free quota.
+    gemini_fallback_models: tuple[str, ...] = field(
+        default_factory=lambda: tuple(
+            m.strip() for m in os.environ.get("GEMINI_FALLBACK_MODELS", "gemini-flash-lite-latest").split(",") if m.strip()
+        )
+    )
     storage_dir: Path = field(
         default_factory=lambda: Path(
             os.environ.get("STORAGE_DIR", str(BACKEND_DIR / "storage"))

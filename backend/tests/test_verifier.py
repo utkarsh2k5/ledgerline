@@ -133,3 +133,58 @@ def test_gemini_provider_request_and_errors(monkeypatch):
     monkeypatch.setattr(httpx, "post", lambda *a, **k: httpx.Response(429, text="quota"))
     with pytest.raises(ProviderError, match="quota"):
         g.generate("prompt", {})
+
+
+def _resp(code, text=None, msg="x"):
+    import httpx
+    if text is not None:
+        return httpx.Response(code, json={"candidates": [{"content": {"parts": [{"text": text}]}}]})
+    return httpx.Response(code, json={"error": {"code": code, "message": msg}})
+
+
+def test_gemini_retries_when_busy_then_succeeds(monkeypatch):
+    import httpx
+
+    from app.ai import providers
+    calls = []
+    replies = iter([_resp(503, msg="high demand"), _resp(503, msg="high demand"), _resp(200, "Fine.")])
+    monkeypatch.setattr(providers.time, "sleep", lambda s: None)
+    monkeypatch.setattr(httpx, "post", lambda url, **k: (calls.append(url), next(replies))[1])
+    g = providers.GeminiProvider("k", "main-model", ("lite-model",))
+    assert g.generate("p", {}) == "Fine."
+    assert all("main-model" in u for u in calls) and len(calls) == 3
+
+
+def test_gemini_switches_to_backup_model_when_still_busy(monkeypatch):
+    import httpx
+
+    from app.ai import providers
+    calls = []
+
+    def fake(url, **k):
+        calls.append(url)
+        return _resp(200, "From lite.") if "lite-model" in url else _resp(503, msg="high demand")
+
+    monkeypatch.setattr(providers.time, "sleep", lambda s: None)
+    monkeypatch.setattr(httpx, "post", fake)
+    g = providers.GeminiProvider("k", "main-model", ("lite-model",))
+    assert g.generate("p", {}) == "From lite."
+    assert g.name == "gemini:lite-model"
+    assert sum("main-model" in u for u in calls) == 3  # 1 try + 2 retries
+
+
+def test_gemini_bad_key_fails_fast(monkeypatch):
+    import httpx
+
+    from app.ai import providers
+    calls = []
+    monkeypatch.setattr(httpx, "post", lambda url, **k: (calls.append(url), _resp(403, msg="API key not valid"))[1])
+    with pytest.raises(ProviderError, match="API key not valid"):
+        providers.GeminiProvider("k", "main-model", ("lite-model",)).generate("p", {})
+    assert len(calls) == 1
+
+
+def test_busy_ai_is_labelled_as_unavailable_not_rejected():
+    from app.reporting.renderers.theme import UNAVAILABLE_TEXT, status_line
+    assert status_line("fallback", "template", [{"kind": "provider_error"}]) == UNAVAILABLE_TEXT
+    assert status_line("fallback", "template", [{"kind": "unsupported_number"}]) != UNAVAILABLE_TEXT

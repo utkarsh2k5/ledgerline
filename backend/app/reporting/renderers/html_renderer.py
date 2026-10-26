@@ -131,7 +131,7 @@ def _block_html(b) -> str:
         paras = "".join(f"<p>{_e(p.strip())}</p>" for p in b.text.split("\n\n"))
         badge = ("ok", "✓ ") if b.status == "verified" else ("fb", "ⓘ ")
         return (f'<div class="commentary">{paras}</div>'
-                f'<span class="badge {badge[0]}">{badge[1]}{_e(T.status_line(b.status, b.provider))}</span>')
+                f'<span class="badge {badge[0]}">{badge[1]}{_e(T.status_line(b.status, b.provider, b.issues))}</span>')
     if isinstance(b, Callout):
         return f'<div class="callout">{_e(b.text)}</div>'
     if isinstance(b, Paragraph):

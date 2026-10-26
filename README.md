@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/python-3.11%2B-17324d" alt="Python 3.11+">
   <img src="https://img.shields.io/badge/FastAPI-backend-17324d" alt="FastAPI">
   <img src="https://img.shields.io/badge/React%20%2B%20TypeScript-frontend-17324d" alt="React + TypeScript">
-  <img src="https://img.shields.io/badge/tests-56%20passing-0b7a3e" alt="56 tests passing">
+  <img src="https://img.shields.io/badge/tests-60%20passing-0b7a3e" alt="60 tests passing">
   <img src="https://img.shields.io/badge/Postgres%20%7C%20SQLite-supported-2a78d6" alt="Postgres and SQLite">
   <img src="https://img.shields.io/badge/license-MIT-8a8984" alt="MIT license">
 </p>
@@ -42,7 +42,7 @@ Ledgerline is my attempt at automating that properly. It takes the raw files (cu
 | **0.2 s** | for all analytics: returns, risk, attribution, funding position and stress tests |
 | **8 ms** | for a 10,000-path Monte Carlo of the funding ratio (vectorised NumPy) |
 | **0.0 bps** | unexplained in attribution after Carino linking (a plain sum leaves a gap, shown in the app) |
-| **56** | automated tests, including 4 property-based tests that check ~460 random portfolios per run |
+| **60** | automated tests, including 4 property-based tests that check ~460 random portfolios per run |
 | **2** | databases it's tested on (SQLite, Postgres). The same data gives the same report fingerprint on both |
 
 <sub>Timings measured in a small cloud container; your laptop will probably be faster.</sub>
@@ -221,7 +221,7 @@ The [dev log](docs/DEVLOG.md) has the problems I hit along the way, like a date 
 ## Tests
 
 ```bash
-cd backend && pytest                                            # 56 tests, ~25 s
+cd backend && pytest                                            # 60 tests, ~25 s
 TEST_DATABASE_URL=postgresql+psycopg://user:pass@host/db pytest # same suite on Postgres
 ```
 

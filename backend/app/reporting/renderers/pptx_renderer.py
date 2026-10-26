@@ -143,7 +143,7 @@ def _commentary_slide(deck: _Deck, title: str, block: Commentary) -> None:
     box = _text(s, MARGIN, Inches(1.4), W - 2 * MARGIN, Inches(4.9), block.text, 17, False, T.INK)
     box.text_frame.paragraphs[0].line_spacing = 1.25
     mark = "✓ " if block.status == "verified" else "ⓘ "
-    _text(s, MARGIN, Inches(6.4), W - 2 * MARGIN, Inches(0.5), mark + T.status_line(block.status, block.provider),
+    _text(s, MARGIN, Inches(6.4), W - 2 * MARGIN, Inches(0.5), mark + T.status_line(block.status, block.provider, block.issues),
           11, False, T.GOOD if block.status == "verified" else T.WARN_INK, italic=True)
 
 

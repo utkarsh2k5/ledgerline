@@ -133,9 +133,12 @@ function RunStatus({ r }: { r: Run }) {
 }
 
 function CommentaryBadge({ r }: { r: Run }) {
-  return r.commentary_status === "verified"
-    ? <Status kind="good">{r.commentary_provider === "template" ? "Rule-based" : "AI, verified"}</Status>
-    : <Status kind="warn">AI rejected, fallback used</Status>;
+  if (r.commentary_status === "verified")
+    return <Status kind="good">{r.commentary_provider === "template" ? "Rule-based" : "AI, verified"}</Status>;
+  const busy = r.commentary_issues.length > 0 && r.commentary_issues.every((i) => i.kind === "provider_error");
+  return busy
+    ? <Status kind="info">AI busy, standard text used</Status>
+    : <Status kind="warn">AI draft rejected, standard text used</Status>;
 }
 
 function RunDetail({ run, onChanged }: { run: Run; onChanged: () => void }) {

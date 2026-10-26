@@ -1,0 +1,6 @@
+# Generated demo outputs and sample data aren't source code;
+# keep them out of GitHub's language breakdown.
+sample_output/** linguist-generated=true
+data/** linguist-generated=true
+docs/** linguist-documentation=true
+*.html linguist-detectable=false
